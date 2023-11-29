@@ -1,0 +1,134 @@
+go :-
+    hypothesis(Disease),
+    write('The patient has '),
+    write(Disease),
+    nl,
+    write('PLEASE, TAKE CARE!!! '),
+    undo.
+
+%Diseases
+hypothesis(cold) :- cold, !.
+hypothesis(flu) :- flu, !.
+hypothesis(typhoid) :- typhoid, !.
+hypothesis(measles) :- measles, !.
+hypothesis(malaria) :- malaria, !.
+hypothesis(allergy) :- allergy, !.
+hypothesis(pneumonia) :- pneumonia, !.
+hypothesis(unknown). /* no diagnosis */
+
+%Rules
+cold :-
+    verify(sneezing),
+    verify(sore_throat),
+    write('Advices and Suggestions:'),
+    nl,
+    write('1: Rest and drink plenty of fluids'),
+    nl,
+    write('2: Over-the-counter cold medication'),
+    nl,
+    write('3: Warm saltwater gargle'),
+    nl.
+
+flu :-
+    verify(fever),
+    verify(body_ache),
+    write('Advices and Suggestions:'),
+    nl,
+    write('1: Rest and stay hydrated'),
+    nl,
+    write('2: Over-the-counter flu medication'),
+    nl,
+    write('3: Warm soup and tea'),
+    nl.
+
+typhoid :-
+    verify(abdominal_pain),
+    verify(poor_appetite),
+    verify(fever),
+    write('Advices and Suggestions:'),
+    nl,
+    write('1: Antibiotics prescribed by a doctor'),
+    nl,
+    write('2: Rest and drink plenty of fluids'),
+    nl,
+    write('3: Soft and easily digestible diet'),
+    nl.
+
+measles :-
+    verify(rash),
+    verify(conjunctivitis),
+    write('Advices and Suggestions:'),
+    nl,
+    write('1: Rest and stay hydrated'),
+    nl,
+    write('2: Over-the-counter pain relievers'),
+    nl,
+    write('3: Vitamin A supplementation'),
+    nl.
+
+malaria :-
+    verify(sweating),
+    verify(nausea),
+    verify(vomiting),
+    write('Advices and Suggestions:'),
+    nl,
+    write('1: Antimalarial medication prescribed by a doctor'),
+    nl,
+    write('2: Rest and stay hydrated'),
+    nl,
+    write('3: Avoiding mosquito bites'),
+    nl.
+
+allergy :-
+    verify(sneezing),
+    verify(itchy_eyes),
+    write('Advices and Suggestions:'),
+    nl,
+    write('1: Antihistamine medication'),
+    nl,
+    write('2: Avoid allergens'),
+    nl,
+    write('3: Use air purifiers'),
+    nl.
+
+pneumonia :-
+    verify(shortness_of_breath),
+    verify(chest_pain),
+    write('Advices and Suggestions:'),
+    nl,
+    write('1: Antibiotics prescribed by a doctor'),
+    nl,
+    write('2: Rest and plenty of fluids'),
+    nl,
+    write('3: Use a humidifier'),
+    nl.
+
+
+%questions
+ask(Question) :-
+    write('Does the patient have the following symptom: '),
+    write(Question),
+    write('? '),
+    read(Response),
+    nl,
+    ((Response == yes ; Response == y)
+    ->
+    assert(yes(Question)) ;
+    assert(no(Question)), fail).
+:- dynamic yes/1, no/1.
+
+
+%verify
+verify(S) :-
+    (yes(S)
+    ->
+    true ;
+    (no(S)
+    ->
+    fail ;
+    ask(S))).
+
+%Undo all yes/no assertions
+undo :- retract(yes(_)),fail.
+undo :- retract(no(_)),fail.
+undo.
